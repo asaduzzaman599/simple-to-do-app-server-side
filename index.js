@@ -36,8 +36,8 @@ async function run() {
             res.send(result)
         })
 
-        // update a task task 
-        app.get('/task/:taskId', async (req, res) => {
+        // update a task  
+        app.put('/task/:taskId', async (req, res) => {
             const { taskId } = req.params
             const filter = { _id: ObjectId(taskId) };
 
@@ -50,6 +50,22 @@ async function run() {
             const result = await collectionTask.updateOne(filter, updateDoc, options);
             res.send(result)
         })
+
+        // delete a task  
+        app.delete('/task/:taskId', async (req, res) => {
+            const { taskId } = req.params
+            const filter = { _id: ObjectId(taskId) };
+
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    complete: true
+                },
+            };
+            const result = await collectionTask.updateOne(filter, updateDoc, options);
+            res.send(result)
+        })
+
 
 
 
