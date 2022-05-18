@@ -54,15 +54,13 @@ async function run() {
         // delete a task  
         app.delete('/task/:taskId', async (req, res) => {
             const { taskId } = req.params
-            const filter = { _id: ObjectId(taskId) };
-
-            const options = { upsert: true };
-            const updateDoc = {
-                $set: {
-                    complete: true
-                },
-            };
-            const result = await collectionTask.updateOne(filter, updateDoc, options);
+            const query = { _id: ObjectId(taskId) };
+            const result = await collectionTask.deleteOne(query);
+            if (result.deletedCount === 1) {
+                console.log("Successfully deleted one document.");
+            } else {
+                console.log("No documents matched for delete.");
+            }
             res.send(result)
         })
 
