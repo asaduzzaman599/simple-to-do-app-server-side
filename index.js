@@ -1,7 +1,7 @@
 require('dotenv').config()
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 const app = express()
 const port = process.env.PORT || 5000
@@ -21,7 +21,36 @@ async function run() {
     try {
         await client.connect()
         console.log('DB Connected')
-        const collectionTask = client.db
+        const collectionTask = client.db("todo_app").collection("taks");
+
+        // create a document to insert
+        app.post('/task', async (req, res) => {
+            const task = req.body
+            const result = await collectionTask.insertOne(doc);
+            res.send(result)
+        })
+
+        // get all task 
+        app.get('/task', async (req, res) => {
+            const result = await collectionTask.find({}).toArray();
+            res.send(result)
+        })
+
+        // update a task task 
+        app.get('/task/:taskId', async (req, res) => {
+            const { taskId } = req.params
+            const filter = { _id: ObjectId(taskId) };
+
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    complete: true
+                },
+            };
+            const result = await collectionTask.updateOne(filter, updateDoc, options);
+            res.send(result)
+        })
+
 
 
     }
