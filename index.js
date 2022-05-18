@@ -26,7 +26,6 @@ async function run() {
         // create a document to insert
         app.post('/task', async (req, res) => {
             const task = req.body
-            console.log(task)
             const result = await collectionTask.insertOne(task);
             res.send(result)
         })
