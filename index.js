@@ -32,7 +32,11 @@ async function run() {
 
         // get all task 
         app.get('/task', async (req, res) => {
-            const result = await collectionTask.find({}).toArray();
+            const queryEmail = req.query.email;
+            if (!queryEmail) {
+                res.send([])
+            }
+            const result = await collectionTask.find({ email: queryEmail }).toArray();
             res.send(result)
         })
         // update a task  
